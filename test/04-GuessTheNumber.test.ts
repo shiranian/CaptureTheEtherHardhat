@@ -24,10 +24,13 @@ describe('GuessTheNumberChallenge', () => {
   });
 
   it('exploit', async () => {
-    /**
-     * YOUR CODE HERE
-     * */
+     // Attacker makes the guess by sending 1 ether
+    const tx = await target.guess(42, { value: utils.parseEther('1') });
+    await tx.wait();
 
+    
+    const contractBalance = await provider.getBalance(target.address);
+    // Check if the contract's balance is zero (challenge is complete)
     expect(await provider.getBalance(target.address)).to.equal(0);
   });
 });

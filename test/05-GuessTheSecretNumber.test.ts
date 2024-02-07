@@ -24,10 +24,13 @@ describe('GuessTheSecretNumberChallenge', () => {
   });
 
   it('exploit', async () => {
-    /**
-     * YOUR CODE HERE
-     * */
-
+    let answer = "0xdb81b4d58595fbbbb592d3661a34cdca14d7ab379441400cbfa1b78bc447c365";
+    for(let i = 0; i < 2 ** 8; i++) {
+      if(ethers.utils.keccak256([i]) === answer) {
+        await target.guess(i, {value: ethers.utils.parseEther("1.0")});
+        break;
+      }
+    }
     expect(await target.isComplete()).to.equal(true);
   });
 });

